@@ -1,0 +1,10 @@
+﻿CommonLibrary:
+	*Technically a common lib isn't even needed. Could put both interfaces in their respective projects.
+	Added void SendMessageToChat(string message, int chatID); to IServerAPI
+	Added void void SendMessage(int clientID, int chatID, string message);
+	Changed void SendNewContact(string username); to void SendNewContact(int clientID, string contactName);
+
+Server:
+	Model's "chats" param needs to be HashMap<Integer, Chat> not HashMap<Integer, Account>
+	Allowing an IClient arg in Controller means that there is a loose association with Controller->IClient
+		- this can't be prevented, but it might be a break of MVC. Rework?
