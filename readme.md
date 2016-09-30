@@ -1,5 +1,5 @@
 Hi!
-Welcome to my in-class repo 
+These are small projects that I've done in the past year
 
 Enjoy,
 
