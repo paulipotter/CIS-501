@@ -1,14 +1,17 @@
 from __future__ import print_function
 import pymysql
 from Calf import *
-import csv
-import json
-import sys
-import os
+import csv, json, sys, os
+
+''' Calf_counter.py creates and fills out the dictionary with the corresponding
+calf and contacts objects. The most important part is that it creates a dictionary
+with a key for each calf (101-170) with a *calf* object as value. The content of
+the *calf* object will be explained in Calf.py and below.'''
 
 calf_list = {}
 day = 0
 
+#  creates the dictionary that will be used throughout the program
 def create_dict(total_study_days):
     # create new dict with INT as key and an object->(healthycount, sickcount, sick)
     # test Paula
@@ -24,17 +27,16 @@ def create_dict(total_study_days):
         "healthy_count":test.healthyCount,
         "sick":test.sick}
         calf_tag+=1
-    
+
     # Create buddy properties
     calf_tag = 101
     while calf_tag <= 170:
-        for i in range(101,171):        
-            calf_list[calf_tag][i]={"total_seconds":test.total_seconds,"seconds_by_day":test.seconds_by_day}   
+        for i in range(101,171):
+            calf_list[calf_tag][i]={"total_seconds":test.total_seconds,"seconds_by_day":test.seconds_by_day}
         calf_tag+=1
-                
+
     #print(calf_list)
     return calf_list
-
 
 # uses mysql to pull data and temporarily store it into an array as [calftag1, x, y, calftag2, x, y]
 def pull_data(index):
@@ -45,23 +47,21 @@ def pull_data(index):
 
     try:
         # this is going to pull all calftags that were .3 meters from each other for 1 second
-        # store data in an array
-
         query = """
-            SELECT a.calftag, b.calftag 
+            SELECT a.calftag, b.calftag
             FROM rawrtls a, rawrtls b MySQL - proj_bci@mysql.cis.ksu.edu
-            WHERE a.calftag < b.calftag 
-                AND ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)) <= .09 
+            WHERE a.calftag < b.calftag
+                AND ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)) <= .09
                 AND a.ts BETWEEN {commence} AND {adjourn}
                 AND a.ts = b.ts;
         """.format(commence=index, adjourn=index + 30)
 
-        #"AND a.ts between "+ str(index) + " and " + str(index + 30)+" "
-        
+
         print("execure query",cursor.execute(query))
         contacts = []
+
+        #  takes all tuple results and stores it in an list
         for i, row in enumerate(cursor.fetchall()):
-            #print('im looping')
             contacts.append(row)
     except:
         print(sys.exc_info())
@@ -74,7 +74,6 @@ def pull_data(index):
 
 
 # imports the CSV file that states when the calves were shedding. this is added to each CALF object's sick list.
-    
 def health_status(calf_list):
 
     with open('shedding_times1.csv') as csv_file:
@@ -84,18 +83,7 @@ def health_status(calf_list):
 
         read_csv.next()
 
-        # for i, row in enumerate(read_csv):
-        #     for j in range(1,25):
-        #         if row[j] == '1':
-        #             if intermediate_line[0] not in calf_list:
-        #                 print(intermediate_line[0])
-        #                 continue
-        #             else:
-        #                 calf_list[intermediate_line[0]]["sick"].append(True)
-        #
-        # print(len(calf_list[(read_csv.line_num) + 99]["sick"]))
-
-
+        # read each row and cell, correspond 0s and 1s to the health state of the given calf on the given day
         for row in read_csv:
             temp_list = []
             for i in range(1, 25):
@@ -114,7 +102,7 @@ def health_status(calf_list):
         #print(calf_list[101]["sick"])
         #print(calf_list[102]["sick"])
     return calf_list
-    
+
 
 #calf_contacts is the list of tuples obtained from the pull_data() function and day indicates which day we are in the loop right now
 def add_counts(calf_contact, day):
@@ -122,7 +110,7 @@ def add_counts(calf_contact, day):
         #   "sick_count"
         #   "healthy_count"
         #   "sick"
-        #    key: calf_b   
+        #    key: calf_b
             #   "total_seconds"
             #   "seconds_by_day"
 

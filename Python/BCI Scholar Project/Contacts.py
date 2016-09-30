@@ -1,3 +1,12 @@
+#  Author: Paula Mendez
+#  email: paulipotter@ksu.edu
+#  Contacts.py
+
+''' Object *Contact* is inside of every calf object. It contains the second calf
+contacted, the total seconds contacted during the study days and a list that 
+contains the number of seconds contacted between calf *a* and calf *b* separated
+by day'''
+
 class Contacts:
     def __init__(self):  # int, int, list
         self.contact_buddy = 0
