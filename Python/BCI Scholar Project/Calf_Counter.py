@@ -42,7 +42,7 @@ def create_dict(total_study_days):
 def pull_data(index):
     # pull data with mysql
     print("Pulling Data")
-    db = pymysql.connect(host='mysql.cis.ksu.edu', user='paulipotter', passwd='Lagartija1!', db='proj_bci')
+    db = pymysql.connect(host='mysql.cis.ksu.edu', user='paulipotter', passwd='', db='proj_bci')
     cursor = db.cursor()
 
     try:
