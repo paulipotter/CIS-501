@@ -1,12 +1,4 @@
-from __future__ import print_function
-import pymysql
-from Calf import *
-import csv, json, sys, os
-
-''' Calf_counter.py creates and fills out the dictionary with the corresponding
-calf and contacts objects. The most important part is that it creates a dictionary
-with a key for each calf (101-170) with a *calf* object as value. The content of
-the *calf* object will be explained in Calf.py and below.'''
+from __future__ import print_function import pymysql from Calf import * import csv, json, sys, os ''' Calf_counter.py creates and fills out the dictionary with the corresponding calf and contacts objects. The most important part is that it creates a dictionary with a key for each calf (101-170) with a *calf* object as value. The content of the *calf* object will be explained in Calf.py and below.'''
 
 calf_list = {}
 day = 0
@@ -20,8 +12,7 @@ def create_dict(total_study_days):
     print('Creating Dictionary...')
 
     #loop thru all 70 calves
-    while calf_tag <= 170:
-        #inner loop created contact instances, one per calf (excluding itself)
+    while calf_tag <= 170: #inner loop created contact instances, one per calf (excluding itself)
         calf_list[calf_tag] = {
         "sick_count":test.sickCount,
         "healthy_count":test.healthyCount,
