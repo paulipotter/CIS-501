@@ -1,30 +1,34 @@
-from __future__ import print_function import pymysql from Calf import * import csv, json, sys, os ''' Calf_counter.py creates and fills out the dictionary with the corresponding calf and contacts objects. The most important part is that it creates a dictionary with a key for each calf (101-170) with a *calf* object as value. The content of the *calf* object will be explained in Calf.py and below.'''
+from __future__ import print_function import pymysql from Calf import * import csv, json, sys, os
+''' Calf_counter.py creates and fills out the dictionary with the corresponding calf and contacts objects. 
+The most important part is that it creates a dictionary with a key for each calf (101-170) with a *calf* object as value. 
+The content of the *calf* object will be explained in Calf.py and below.'''
+
 
 calf_list = {}
-day = 0
+day = ZERO 
 
 #  creates the dictionary that will be used throughout the program
 def create_dict(total_study_days):
     # create new dict with INT as key and an object->(healthycount, sickcount, sick)
     # test Paula
     test=Calf(total_study_days)
-    calf_tag = 101
+    current_calf_tag = CALF_TAG_101
     print('Creating Dictionary...')
 
     #loop thru all 70 calves
-    while calf_tag <= 170: #inner loop created contact instances, one per calf (excluding itself)
-        calf_list[calf_tag] = {
+    while current_calf_tag < CALF_TAG_171: #inner loop created contact instances, one per calf (excluding itself)
+        calf_list[current_calf_tag] = {
         "sick_count":test.sickCount,
         "healthy_count":test.healthyCount,
         "sick":test.sick}
-        calf_tag+=1
+        current_calf_tag+= ONE
 
     # Create buddy properties
-    calf_tag = 101
-    while calf_tag <= 170:
-        for i in range(101,171):
-            calf_list[calf_tag][i]={"total_seconds":test.total_seconds,"seconds_by_day":test.seconds_by_day}
-        calf_tag+=1
+    current_calf_tag = CALF_TAG_101 
+    while current_calf_tag < CALF_TAG_171:
+        for i in range(CALF_TAG_101,CALF_TAG_171):
+            calf_list[current_calf_tag][i]={"total_seconds":test.total_seconds,"seconds_by_day":test.seconds_by_day}
+        calf_tag+= ONE
 
     #print(calf_list)
     return calf_list
@@ -45,7 +49,7 @@ def pull_data(index):
                 AND ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)) <= .09
                 AND a.ts BETWEEN {commence} AND {adjourn}
                 AND a.ts = b.ts;
-        """.format(commence=index, adjourn=index + 30)
+        """.format(commence=index, adjourn=index + SECONDS)
 
 
         print("execure query",cursor.execute(query))
