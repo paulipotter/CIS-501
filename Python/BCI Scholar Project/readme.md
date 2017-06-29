@@ -3,7 +3,7 @@ This is my *first contribution to any research ever*. Also, my *first use of Pyt
 
 I was one of 8 scholars chosen by the Beef Cattle institute to participate in a program to "collaborate with different departments across the university to provide new resources for beef producers and veterinarians." [Learn More](http://www.k-state.edu/media/newsreleases/jun16/beefscholars62416.html "K-State News")
 
-[BCI Scholars](http://www.k-state.edu/media/images/jun16/summerscholars-sm.jpg)
+![BCI Scholars](http://www.k-state.edu/media/images/jun16/summerscholars-sm.jpg)
 ###### Here's a nice pic of all of us posing like the good students we are.
 
 The purpose of this project is to use a database of x-y coordinates of 70 calves to determine when they contacted (closer than a foot to each other)
