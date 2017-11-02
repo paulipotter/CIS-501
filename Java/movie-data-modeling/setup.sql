@@ -59,33 +59,3 @@ CREATE TABLE rental(
     times_rented int NOT NULL,
 	PRIMARY KEY(cid, movie_id)
 );
-
--- All above works
-IF EXISTS (SELECT times_rented 
-			FROM rental 
-			WHERE cid=3 and movie_id='M_150')
-	UPDATE rental
-	SET CASE 
-		WHEN status='closed' THEN status='open' AND times_rented = times_rented+1
-		WHEN status='open' THEN status='close' 
---	WHERE
-ELSE
-	INSERT INTO rental (cid,movie_id,status,times_rented)
-	VALUES (3,'M_150','open',1);
-
-INSERT INTO rental (cid,movie_id,status,times_rented)
-	VALUES (3,'M_150','open',1)
-ON CONFLICT (cid, movie_id)
-DO UPDATE rental 
-	SET (CASE 
-		--WHEN status='closed' THEN status='open' AND times_rented = times_rented+1
-	    WHEN status='open' THEN 'closed'	
-		END)
-	WHERE cid = 3 and movie_id = 'M_150';
-/*
-
-DROP TRIGGER IF EXISTS rental_update ON rental;
-CREATE TRIGGER rental_update
-    AFTER UPDATE ON rental 
-    FOR EACH ROW
-*/
