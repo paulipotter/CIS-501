@@ -37,7 +37,6 @@ public class Query {
 					 + "WHERE x.movie_id = ? and x.producer_id = y.producer_id";
 	private PreparedStatement _producer_id_statement;
 
-	/* uncomment, and edit, after your create your own customer database
 	private String _customer_login_sql = "SELECT * FROM customer WHERE login = ? and password = ?";
 	private PreparedStatement _customer_login_statement;
 
@@ -49,8 +48,23 @@ public class Query {
 
 	private String _rollback_transaction_sql = "ROLLBACK";
 	private PreparedStatement _rollback_transaction_statement;
-	 */
 
+    private String _check_rent = "SELECT max(times_rented) from rental"
+                                + "WHERE cid = ? and movie_id = ?";
+    private String _insert_rent = "INSERT INTO rental "
+        + "(cid, movie_id, status,times_rented)"
+        +" VALUES (?,?,'open', 1)";
+    private PreparedStatement _new_rent_statement;
+
+    private String _update_rent = "UPDATE ("+_check_rent+")"
+                                    +" SET status = ?,"
+                                    +" times_rented = ?";
+    private PreparedStatement _old_rent_statement;
+
+
+    private String _max_rentals_query = "SELECT max_rentals FROM plan as p "
+            + "inner join customer as c ON c.plan = p.plan_id";
+    private PreparedStatement _max_rentals_statement;
 	public Query() {
 	}
 
@@ -119,6 +133,8 @@ public class Query {
 
 		/* add here more prepare statements for all the other queries you need */
 		/* . . . . . . */
+        _new_rent_statement = _postgreSqlDB.prepareStatement(_insert_rent);
+        _old_rent_statement = _postgreSqlDB.prepareStatement(_update_rent);
 	}
 
 
@@ -127,21 +143,29 @@ public class Query {
 
 	public int helper_compute_remaining_rentals(int cid) throws Exception {
 		/* how many movies can she/he still rent ? */
-		string q = 
+        ResultSet max_rentals = q.executeQuery(max_rentals_query);
+        
+        String outstanding_query = "SELECT count(*) from rental where cid = "+cid+ " and status = 'open'"
+        ResultSet outstanding = q.executeQuery(outstanding_query);
 		/* you have to compute and return the difference between the customer's plan
 		   and the count of outstanding rentals */
-		return (99);
+		return (maxrentals.getInt() - );
 	}
 
 	public String helper_compute_customer_name(int cid) throws Exception {
 		/* you find  the name of the current customer */
-		return ("Joe Name");
+        String q = "SELECT first_name || ' ' || last name FROM customer WHERE cid= "+cid + ";";
+        // call the query 
+        ResultSet name = q.executeQuery();
+		return (name.getString());
 
 	}
 
 	public boolean helper_check_plan(int plan_id) throws Exception {
 		/* is plan_id a valid plan id?  you have to figure out */
+        String q = " SELECT plan_id"
 		return true;
+
 	}
 
 	public boolean helper_check_movie(String movie_id) throws Exception {
@@ -159,8 +183,6 @@ public class Query {
 	public int transaction_login(String name, String password) throws Exception {
 		/* authenticates the user, and returns the user id, or -1 if authentication fails */
 
-		/* Uncomment after you create your own customers database */
-		/*
 		int cid;
 
 		_customer_login_statement.clearParameters();
@@ -170,7 +192,6 @@ public class Query {
 	    if (cid_set.next()) cid = cid_set.getInt(1);
 		else cid = -1;
 		return(cid);
-		 */
 		return (55); //comment after you create your own customers database
 	}
 
@@ -225,6 +246,23 @@ public class Query {
 	public void transaction_rent(int cid, String movie_id) throws Exception {
 	    /* rend the movie movie_id to the customer cid */
 	    /* remember to enforce consistency ! */
+        _check_rent.clearParameters();
+        _check_rent.setString(1,'%' + cid + '%',2, '%' + movie_id + '%' );
+
+        ResultSet check_existing = _check_rent.executeQuery();
+        int rented = 0;
+        String open = "open";
+        if (check_existing.first()) //not empty
+        {
+            _old_rent_statement.clearParameters();
+            _old_rent_statement.setString(1,'%' + cid + '%',2, '%' + movie_id + '%' , 3, '%'+open+'%',rented++ );
+
+        }else  //is empty
+        {
+            _new_rent_statement.clearParameters();
+            _new_rent_statement.setString(1,'%' + cid + '%',2, '%' + movie_id + '%' );
+        }
+
 	}
 
 	public void transaction_return(int cid, String movie_id) throws Exception {
