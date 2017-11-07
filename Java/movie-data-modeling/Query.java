@@ -49,10 +49,8 @@ public class Query {
 	private String _rollback_transaction_sql = "ROLLBACK";
 	private PreparedStatement _rollback_transaction_statement;
 
-    private String _check_rent = "SELECT max(times_rented) from rental"
-                                + "WHERE cid = ? and movie_id = ?";
-    private String _insert_rent = "INSERT INTO rental "
-        + "(cid, movie_id, status,times_rented)"
+    private String _check_rent = "SELECT max(times_rented) from rental WHERE cid = ? and movie_id = ?";
+    private String _insert_rent = "INSERT INTO rental (cid, movie_id, status,times_rented)"
         +" VALUES (?,?,'open', 1)";
     private PreparedStatement _new_rent_statement;
 
