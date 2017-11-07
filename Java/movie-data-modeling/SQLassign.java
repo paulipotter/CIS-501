@@ -46,8 +46,7 @@ public class SQLassign {
 								+ movie_title + "'");
 						q.transaction_search(cid, movie_title);
 					} else {
-						System.out
-								.println("Error: need to type in movie title");
+						System.out.println("Error: need to type in movie title");
 					}
 				}
 
@@ -55,6 +54,15 @@ public class SQLassign {
 					/* choose a new rental plan, or, if none is given, then list all available plans */
 					if (st.hasMoreTokens()) {
 						int plan_id = Integer.parseInt(st.nextToken());
+						
+						if(q.helper_check_plan(plan_id))
+						{
+							q.transaction_choose_plan(cid,plan_id);s
+						}
+						else
+						{
+							System.out.println(q.transaction_list_plans());
+						}
 						/* need to check that plan_id is a valid plan id in the database, */
 						/* if yes, then set the new plan for the current customer */
 						/* if not, then list all available plans */
