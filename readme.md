@@ -1,5 +1,5 @@
 Hi!
-These are small projects that I've done in the past year
+These are small projects that I've done over time
 
 Enjoy,
 
